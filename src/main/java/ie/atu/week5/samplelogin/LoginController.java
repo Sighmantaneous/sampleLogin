@@ -25,7 +25,7 @@ public class LoginController {
             PreparedStatement insertStmt = conn.prepareStatement(
                     "INSERT INTO userlogin (username, password) VALUES (?, ?)");
             insertStmt.setString(1, username);
-            insertStmt.setString(2, password); // hash in real apps
+            insertStmt.setString(2, password);
             insertStmt.executeUpdate();
 
             return "User registered!";
@@ -43,7 +43,7 @@ public class LoginController {
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 String storedPassword = rs.getString("password");
-                if (storedPassword.equals(password)) { // compare hashed passwords in real apps
+                if (storedPassword.equals(password)) {
                     return "Login successful!";
                 }
             }
