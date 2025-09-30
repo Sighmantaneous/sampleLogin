@@ -10,6 +10,7 @@ import java.sql.*;
 public class LoginController {
 
     MariaDB db  = new MariaDB();
+    private final String adminPassword = "Password123";
 
     @GetMapping("/register")
         public String register(@RequestParam String username, @RequestParam String password){
@@ -52,5 +53,26 @@ public class LoginController {
             return "Error: " + e.getMessage();
         }
     }
+    @GetMapping("/delete")
+    public String deleteUser(@RequestParam String username, @RequestParam String adminPassProvided) {
+
+        if (!adminPassProvided.equals(adminPassword)) {
+            return "Unauthorized: admin password is incorrect!";
+        }
+
+        try (Connection conn = db.getConnection()) {
+            PreparedStatement stmt = conn.prepareStatement(
+                    "DELETE FROM userlogin WHERE username = ?");
+            stmt.setString(1, username);
+            int affected = stmt.executeUpdate();
+
+            if (affected > 0) return "User deleted!";
+            else return "User not found.";
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "Error: " + e.getMessage();
+        }
+    }
+
     }
 
